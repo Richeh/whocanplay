@@ -8,13 +8,10 @@ class api extends Model
 {
 	public $replaceDetails = Array();
 
-
-
     public function gameDetails(){
 		$url = $this->fillDetails("https://store.steampowered.com/api/appdetails?appids=%gameid%");
 		$response = $this->makeApiRequest( $url );
 		$gameid = $this->replaceDetails['gameid'];
-
 		foreach( $response as $id => $gameQuery ){
 			if($gameQuery->success == true){
 				return $gameQuery->data;
@@ -26,21 +23,24 @@ class api extends Model
     }
 
     public function playersDetails(){
-		$url = $this->fillDetails("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%apikey%&steamids=%userid%");
+		$url = $this->fillDetails("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%apikey%&steamids=%steamid%");
 		$response = $this->makeApiRequest( $url );
-		return $response;
+		foreach( $response as $blah ){
+			return($blah->players[0]);
+		}
     }
 
     public function playersGames(){
 		$url = $this->fillDetails("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=%apikey%&include_appinfo=true&steamid=%steamid%&format=json");
 		$response = $this->makeApiRequest( $url );
-		return $response;
+		return $response->response->games;
     }
 
     public function playersFriends(){
 		$url = $this->fillDetails("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%apikey%&steamid=%steamid%&relationship=friend");
 		$response = $this->makeApiRequest( $url );
-		return $response;
+
+		return $response->friendslist->friends;
     }
 
     function fillDetails( $url ){

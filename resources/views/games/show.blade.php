@@ -25,6 +25,7 @@
 <div>
     <h2>{{ $game->name }}</h2>
     <p>{{ $game->description}}</p>
+    
     <ul>
         @foreach ($game->categories()->get() as $category)
             <li>{{$category->name}}</li>

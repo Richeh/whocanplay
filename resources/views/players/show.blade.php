@@ -13,9 +13,7 @@
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
-                    @endif
-
-                  
+                    @endif                  
                 </div>
             </div>
         </div>
@@ -23,10 +21,22 @@
 </div>
 
 <div>
-    <h2>{{ $player->name }}</h2>
+    <h2><img src="{{$details->avatarfull}}" /> {{ $details->personaname }}</h2>
+    @if(isset($details->realname))
+    <p>{{$details->realname}}</p>
+    @endif
+    
     <ul>
-        @foreach ($player->friends()->get() as $friend)
-            <li>{{$friend->name}}</li>
+        @foreach ($friends as $friend)
+        <?php $friendDetails = $friend->steamdetails(); ?>
+            <li><a href = "/player/{{$friendDetails->steamid}}">{{$friendDetails->personaname}}</a></li>
+        @endforeach
+    </ul>
+
+      <ul>
+        @foreach ($games as $game)
+            <li><a href = "/game/{{$game->appid}}">{{$game->name}}</a></li>
+        
         @endforeach
     </ul>
 </div>

@@ -50,9 +50,12 @@ class PlayerController extends Controller
         $player = new \App\player;
 
         $player->steamid = $steamid;
-        //dd($game);
+        $details = $player->steamdetails();
+        $friends = $player->friends();
+        $games   = $player->games();
+
+        return view("players.show", ["friends"=>$friends, "details"=>$details, "games"=>$games]);
         if( $game ){
-            return view("games.show", ["game"=>$game]);
         }
         else{
             $attributes = ["steamid"=>$gameid, "name"=>"temp"];
