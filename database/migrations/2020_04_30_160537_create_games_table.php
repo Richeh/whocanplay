@@ -20,6 +20,8 @@ class CreateGamesTable extends Migration
             $table->string("steamId");
             $table->text("description")->nullable();
             $table->string("image")->nullable();
+            $table->string("background")->nullable();
+            $table->string("metacritic")->nullable();
             $table->boolean("isfree")->default(false);
         });
 

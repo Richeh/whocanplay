@@ -16,20 +16,26 @@
                     @endif
 
                   
+
+
+                <div class="columns">
+                    <div class="column">
+                    <h2 class="is-primary">{{ $game->name }}</h2>  
+                    <ul>
+                        @foreach ($game->categories()->get() as $category)
+                            <li>{{$category->name}}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="column">
+                    {{ $game->description}}
+                    </div>
+                  
+                </div>
+                  
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div>
-    <h2>{{ $game->name }}</h2>
-    <p>{{ $game->description}}</p>
-    
-    <ul>
-        @foreach ($game->categories()->get() as $category)
-            <li>{{$category->name}}</li>
-        @endforeach
-    </ul>
 </div>
 @endsection

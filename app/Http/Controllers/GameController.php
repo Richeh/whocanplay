@@ -46,14 +46,14 @@ class GameController extends Controller
      */
     public function show($gameid)
     {
-        $game = \App\game::where(["steamid"=>$gameid])->first();
+        $game = \App\game::where(["steamId"=>$gameid])->first();
         //dd($game);
         if( $game ){
             return view("games.show", ["game"=>$game]);
         }
         else{
-            $attributes = ["steamid"=>$gameid, "name"=>"temp"];
-            $game = \App\Game::create( $attributes );
+            $game = new \App\Game;
+            $game->steamId = $gameid;
             $game->updateDetails();
             return view("games.show", ["game" => $game]);
         }

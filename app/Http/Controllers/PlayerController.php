@@ -45,25 +45,62 @@ class PlayerController extends Controller
      * @param  \App\game  $game
      * @return \Illuminate\Http\Response
      */
-    public function show($steamid)
+    public function show(Request $request, $steamId)
     {
         $player = new \App\player;
 
-        $player->steamid = $steamid;
+        $player->steamId = $steamId;
         $details = $player->steamdetails();
         $friends = $player->friends();
         $games   = $player->games();
-
-        return view("players.show", ["friends"=>$friends, "details"=>$details, "games"=>$games]);
-        if( $game ){
-        }
-        else{
-            $attributes = ["steamid"=>$gameid, "name"=>"temp"];
-            $game = \App\Game::create( $attributes );
-            $game->updateDetails();
-            return view("games.show", ["game" => $game]);
+        $playerGroup = $request->session()->get("playersInGroup");
+        if(!$playerGroup){
+            $playerGroup = Array();
         }
 
+        return view("players.show", ["friends"=>$friends, "details"=>$details, "games"=>$games, "playerGroup"=>$playerGroup]);
+    }
+
+
+    public function scanLibrary( $steamId ){
+        $player = new \App\player;
+
+        $player->steamId = $steamId;
+        $games   = $player->games();
+       // dd($games);
+        $maxscan = 10;
+        $gamecount = count($games)-1;
+        if( $maxscan > $gamecount){
+            $maxscan = $gamecount;
+        }
+        $scanned = 0;
+
+        try{
+            while( $scanned <= $maxscan ){
+                $game = array_pop($games);
+
+                if( $game->appid ){
+                    $gameObj = \App\Game::where("steamId", $game->appid)->first();
+                    if( !$gameObj ){
+                    $scanned++;
+                    
+                        $attributes = ["steamId"=>$game->appid, "name"=>"temp"];                
+                        $gameObj = new \App\Game($attributes);
+                   //     dd($gameObj);
+                        $gameObj->updateDetails();
+
+                    }
+                }
+                else{
+                    $scanned++;                    
+                }
+            }
+            
+        }    
+        catch(Exception $e){
+            return redirect("/player/".$steamId)->withErrors(['msg', 'The Steam API is pretty busy.  Trying again in a few seconds might help!']);
+        }    
+        return redirect("/player/".$steamId);
     }
 
     /**

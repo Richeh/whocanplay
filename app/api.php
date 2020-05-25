@@ -3,16 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use GuzzleHttp\Client;
 
 class api extends Model
 {
 	public $replaceDetails = Array();
 
     public function gameDetails(){
+    	$this->checkRequirements(["gameid"]);
 		$url = $this->fillDetails("https://store.steampowered.com/api/appdetails?appids=%gameid%");
 		$response = $this->makeApiRequest( $url );
-		$gameid = $this->replaceDetails['gameid'];
-		foreach( $response as $id => $gameQuery ){
+    	foreach( $response as $id => $gameQuery ){
 			if($gameQuery->success == true){
 				return $gameQuery->data;
 			}
@@ -22,22 +23,38 @@ class api extends Model
 		}
     }
 
+    public function checkRequirements($fields){
+    	foreach( $fields as $field ){
+    		if( !array_key_exists($field, $this->replaceDetails) || !$this->replaceDetails[$field]){
+    			throw new \Exception("Missing details");
+    		}
+    	}
+    }
+
     public function playersDetails(){
-		$url = $this->fillDetails("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%apikey%&steamids=%steamid%");
+		$url = $this->fillDetails("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%apikey%&steamids=%steamId%");
 		$response = $this->makeApiRequest( $url );
 		foreach( $response as $blah ){
 			return($blah->players[0]);
 		}
     }
 
-    public function playersGames(){
-		$url = $this->fillDetails("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=%apikey%&include_appinfo=true&steamid=%steamid%&format=json");
+    public function playersGames( $steamId = null ){
+    	if($steamId){
+    		$this->replaceDetails['steamId'] = $steamId;
+    	}
+		$url = $this->fillDetails("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=%apikey%&include_appinfo=true&steamid=%steamId%&format=json");
 		$response = $this->makeApiRequest( $url );
-		return $response->response->games;
+		if(isset($response->response->games)){
+			return $response->response->games;
+		}
+		else{
+			throw new \Exception("API busy");
+		}
     }
 
     public function playersFriends(){
-		$url = $this->fillDetails("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%apikey%&steamid=%steamid%&relationship=friend");
+		$url = $this->fillDetails("http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=%apikey%&steamid=%steamId%&relationship=friend");
 		$response = $this->makeApiRequest( $url );
 
 		return $response->friendslist->friends;
@@ -54,8 +71,19 @@ class api extends Model
     }
 
 	function makeApiRequest( $url ){
-		$data = file_get_contents($url);
-		$response = json_decode($data);
-		return $response;
+	//	dd($url);
+		$client = new \GuzzleHttp\Client();
+		if($client){
+			$response = $client->request("GET", $url);
+		$body = $response->getBody();
+		if($response->getStatusCode() == 200){
+			return json_decode((string)$body);
+		}
+		else{
+			throw new \Exception("API busy");
+		}
+		}
+		
 	}
+
 }

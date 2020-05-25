@@ -17,7 +17,7 @@ class CreateGamecategoriesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string("name")->default("");
-            $table->string("steamid");
+            $table->string("steamId");
         });
 
         Schema::create("gamecategorylink", function( Blueprint $table) {

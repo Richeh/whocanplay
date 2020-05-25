@@ -6,13 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class player extends Model
 {
+
+	public $steamId;
+	
     public function friends(){
     	$api = new \App\api();
-    	$api->replaceDetails = [ "steamid" => $this->steamid ];
+    	$api->replaceDetails = [ "steamId" => $this->steamId ];
     	$friends = [];
     	foreach( $api->playersFriends() as $friend ){
     		$friendo = new \App\Player;
-    		$friendo->steamid = $friend->steamid;
+    		$friendo->steamId = $friend->steamid;
     		$friends[] = $friendo;
     	}
     	return $friends;
@@ -20,14 +23,14 @@ class player extends Model
 
     public function steamdetails(){
     	$api = new \App\api;
-    	$api->replaceDetails = [ "steamid" => $this->steamid ];
+    	$api->replaceDetails = [ "steamId" => $this->steamId ];
     	$playersdetails = $api->playersDetails();
     	return $playersdetails;
     }
 
     public function games(){
     	$api = new \App\api;
-    	$api->replaceDetails = [ "steamid" => $this->steamid ];
+    	$api->replaceDetails = [ "steamId" => $this->steamId ];
     	$playersdetails = $api->playersGames();
     	return $playersdetails;
     }

@@ -19,7 +19,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/player/{steamname}', 'playerController@show');
-Route::get('/game/{steamid}', 'gameController@show');
-Route::get('/test', 'homeController@test');
+
+
+Route::group(['middleware' => ['web']], function () {
+
+	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/player/{steamname}', 'playerController@show');
+	Route::get('/player/{steamname}/scan', 'playerController@scanLibrary');
+	Route::get('/game/{steamid}', 'gameController@show');
+	Route::get('/test', 'PlayerGroupController@show');
+	Route::get('/playerGroup', 'PlayerGroupController@show');
+	Route::get('/playerGroup/list', "playerGroupController@listPlayers" );
+	Route::get('/player/{playerId}/addToPlayerGroup', "playerGroupController@addPlayerToGroup" );
+	Route::get('/player/{playerId}/removeFromPlayerGroup', "playerGroupController@removePlayerFromGroup" );
+});
