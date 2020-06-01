@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+      //  $this->middleware('auth');
     }
 
     /**
@@ -30,5 +30,14 @@ class HomeController extends Controller
     {
         
         return view("games.test");
+    }
+
+    public function faq(){
+        return view("pages.faq");
+    }
+    public function flush(){
+        session("loadedPlayersDetails", Array());
+        session("loadedPlayersGames", Array());
+        return back()->withMessage("msg", "Cache flushed");
     }
 }

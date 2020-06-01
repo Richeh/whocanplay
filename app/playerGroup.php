@@ -32,15 +32,27 @@ class playerGroup extends Model
    	 			$steamId = $steamGame->appid;
    	 			if( !isset( $this->games[$steamId]) ){
    	 				$steamGame->players = Array($player->steamId);
-   	 				$this->playerCounts[$steamId] = Array($player->steamId);
+   	 				$this->playerCounts[$steamId] = Array($player->steamId => $player->steamId);
    	 				$this->games[$steamId] = $steamGame;
    	 			}
    	 			else{
-   	 				$this->playerCounts[$steamId][] = $player->steamId;
+   	 				$this->playerCounts[$steamId][$player->steamId] = $player->steamId;
    	 				$this->games[$steamId]->players[] = $player->steamId;
    	 			}
    	 		}
     	}
+    }
+
+    public function loadFromSession(){
+      $players = session("playersInGroup");
+      
+        if(is_array($players)){
+        foreach( $players as $playerId => $true){
+            $playerObj = new \App\Player();
+            $playerObj->steamId = $playerId;
+            $this->addPlayer($playerObj);
+        }
+        }
     }
 
     public function mutualGames( $ubiquity = 0.75 ){

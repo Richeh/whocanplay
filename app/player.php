@@ -24,14 +24,34 @@ class player extends Model
     public function steamdetails(){
     	$api = new \App\api;
     	$api->replaceDetails = [ "steamId" => $this->steamId ];
-    	$playersdetails = $api->playersDetails();
+        $loadedPlayersDetails = session("loadedPlayersDetails");
+        if(!$loadedPlayersDetails){
+            $loadedPlayersDetails = Array();
+        }
+        if(!array_key_exists($this->steamId, $loadedPlayersDetails)){
+        //    dd($this->steamId);
+         //   dd($loadedPlayersDetails);
+            $playersdetails = $api->playersDetails();
+            $loadedPlayersDetails[$this->steamId] = $playersdetails;
+            session(["loadedPlayersDetails"=>$loadedPlayersDetails]);
+        }
+    	$playersdetails = $loadedPlayersDetails[$this->steamId];
     	return $playersdetails;
     }
 
     public function games(){
     	$api = new \App\api;
     	$api->replaceDetails = [ "steamId" => $this->steamId ];
-    	$playersdetails = $api->playersGames();
-    	return $playersdetails;
+         $loadedPlayersGames = session("loadedPlayersGames");
+        if(!$loadedPlayersGames){
+            $loadedPlayersGames = Array();
+        }
+        if(!array_key_exists($this->steamId, $loadedPlayersGames)){
+            $playersGames = $api->playersGames();
+            $loadedPlayersGames[$this->steamId] = $playersGames;
+            session(["loadedPlayersGames"=>$loadedPlayersGames]);
+        }
+        $playersgames = $loadedPlayersGames[$this->steamId];
+    	return $playersgames;
     }
 }

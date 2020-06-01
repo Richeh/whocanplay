@@ -20,9 +20,10 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju-1.12.1/jq-3.3.1/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/b-print-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/r-2.2.5/sl-1.3.1/datatables.min.css"/>
- 
-<script type="text/javascript" src="https://cdn.datatables.net/v/ju-1.12.1/jq-3.3.1/dt-1.10.21/b-1.6.2/b-colvis-1.6.2/b-print-1.6.2/cr-1.5.2/fc-3.3.1/fh-3.1.7/r-2.2.5/sl-1.3.1/datatables.min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="{{asset('datatables/datatables.css') }}"/> 
+<script type="text/javascript" src="{{asset('datatables/datatables.min.js') }}"></script>
 </head>
 <body>
     <div id="app">
@@ -76,10 +77,22 @@
                 </div>
             </div>
         </nav>
-
+        @if (\Session::has('msg'))
+            <div class="message alert-message container">
+                <ul>
+                    <li>{!! \Session::get('msg') !!}</li>
+                </ul>
+            </div>
+        @endif
+        <section>
+            @include("components.playerList")
+        </section>
         <section class="hero">
             @yield('content')
         </main>
+    <section>
+          @include("components.footer")
+      </section>
     </div>
 </body>
 </html>

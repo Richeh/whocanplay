@@ -1,0 +1,6 @@
+.owned{background:#00ff00;}
+.unowned{background:#ff0000;}
+
+ul.playerList li{display:inline-block; list-style-type:none; position:relative; width: 50px; height: 50px; overflow:hidden;}
+ul.playerList span.name{position:absolute; bottom: 0px; left: 0px; background:#fff; font-size: 0.8em; opacity: 0.75;}
+ul.playerList a.remove{position:absolute; top: 0px; right: 0px; background: #ff0000; color:#000000;}

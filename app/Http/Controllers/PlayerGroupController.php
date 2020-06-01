@@ -55,19 +55,16 @@ class PlayerGroupController extends Controller
             "76561198048106778", // Dave
             "76561198442941398"  // Yannick
         ); */
-        $players = $request->session()->get("playersInGroup");
-        $playerObjects = Array();
+
         $playerGroup = new \App\PlayerGroup;
-        if(!is_array($players)){
-            return back()->withErrors("msg", "No players in group");
+        $playerGroup->loadFromSession();    
+        
+        if( count($playerGroup->players) ==0 ){
+            return redirect("/")->withErrors("msg", "No players in group");
         }
-        foreach( $players as $playerId => $true){
-            $playerObj = new \App\Player();
-            $playerObj->steamId = $playerId;
-            $playerObjects[] = $playerObj;
-            $playerGroup->addPlayer($playerObj);
-        }
-        $games = $playerGroup->mutualGames(75/100);
+        
+
+        $games = $playerGroup->mutualGames(50/100);
         return view("playerGroups.show", Array(
             "games" => $games, 
             "playerCounts" => $playerGroup->playerCounts,

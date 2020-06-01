@@ -14,23 +14,15 @@
                 </div>
             </div>
 
-                <div class="columns">
-                    <div class="column card content">
-                        <h3>Player Group</h3>
-                        <?php foreach($playerGroup as $player => $true){?>
-                        <li>{{$player}} <a href="/player/{{$player}}/removeFromPlayerGroup">X</a></li>
-                        <?php } ?>
-                        <a href="/playerGroup">View group games</a>
-
-                    </div>
-                </div>
-
+               
 
                 <div class="columns">
+                    
                     <div class="column card content">
                         <figure class="image is-4by3"><img src="{{$details->avatarfull}}" /></figure>
                         <div class="card-content">
                         <h2> {{ $details->personaname }}</h2>
+                        <a class = "addLink" href = "/player/{{$details->steamid}}/addToPlayerGroup">Add to player group</a>
                         @if(isset($details->realname))
                         <p>{{$details->realname}}</p>
                         @endif
@@ -41,22 +33,30 @@
 
                         <h3>Friends</h3>
                         
-                        <ul>
+                        <table id="friendsTable">
+                            <thead><th>Name</th><th>Add</th></thead>
+                            <tbody>
                             @foreach ($friends as $friend)
                             <?php $friendDetails = $friend->steamdetails(); ?>
-                                <li><a href = "/player/{{$friendDetails->steamid}}">{{$friendDetails->personaname}}</a> <a href = "/player/{{$friendDetails->steamid}}/addToPlayerGroup">+</a></li>
+                                <tr><td><a href = "/player/{{$friendDetails->steamid}}">{{$friendDetails->personaname}}</a> </td><td><a href = "/player/{{$friendDetails->steamid}}/addToPlayerGroup">+</a></td></tr>
                             @endforeach
-                        </ul>
+                            </tbody>
+                        </table>
+                        
                     </div>
                     <div class="content column">
                         <h3>Games</h3>
 
-                          <ul>
+                          <table id="gamesTable">
+                            <thead>
+                                <th>Title</th>
+                            </thead>
+                            <tbody>
                             @foreach ($games as $game)
-                                <li><a href = "/game/{{$game->appid}}">{{$game->name}}</a></li>
-                            
+                                <tr><td><a href = "/game/{{$game->appid}}">{{$game->name}}</a></td></tr>                            
                             @endforeach
-                        </ul>
+                        </tbody>
+                        </table>
                     </div>
         </div>
     </div>

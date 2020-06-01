@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="/player/76561198004384162">Cakeorglory</a>
+                    <a href="/player/76561197973219231">Cakeorglory</a>
                     <a href="/player/76561198004384162">Martin</a>
                     <a href="https://laravel-news.com">News</a>
                     <a href="https://blog.laravel.com">Blog</a>

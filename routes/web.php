@@ -28,6 +28,8 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('/player/{steamname}/scan', 'playerController@scanLibrary');
 	Route::get('/game/{steamid}', 'gameController@show');
 	Route::get('/test', 'PlayerGroupController@show');
+	Route::get('/flush', 'HomeController@flush');
+	Route::get('/faq', 'HomeController@faq');
 	Route::get('/playerGroup', 'PlayerGroupController@show');
 	Route::get('/playerGroup/list', "playerGroupController@listPlayers" );
 	Route::get('/player/{playerId}/addToPlayerGroup', "playerGroupController@addPlayerToGroup" );
